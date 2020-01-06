@@ -18,31 +18,30 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService empser;
 	
-	@CrossOrigin(origins = "http://localhost:4200")
+//	@CrossOrigin(origins = "http://localhost:4200")
+	@CrossOrigin(origins = "https://spingboot-backend.herokuapp.com")
 	@RequestMapping("/employees")
 	public List<Employee> getEmployees(){
 		System.out.println("In controller");
 		return empser.getAllEmployees();
 	}
 	
-	@RequestMapping("/")
-	public String helloworld(){
-		return "Welcome to my app";
-	}
-	
+
 	@RequestMapping("/employees/{id}")
 	public Employee getEmployee(@PathVariable Long id) {
 		return empser.getEmployee(id);
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
+//	@CrossOrigin(origins = "http://localhost:4200")
+	@CrossOrigin(origins = "https://spingboot-backend.herokuapp.com")
 	@RequestMapping(method = RequestMethod.POST, value="/employees")
 	public void addEmployee(@RequestBody Employee emp) {
 		System.out.println(emp.toString());
 		empser.addEmployee(emp);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:4200")
+//	@CrossOrigin(origins = "http://localhost:4200")
+	@CrossOrigin(origins = "https://spingboot-backend.herokuapp.com")
 	@RequestMapping(method = RequestMethod.PUT, value="/employees/{id}")
 	public void updateEmployee(@RequestBody Employee emp, @PathVariable int id) {
 		System.out.println("In updateEmployee "+emp.toString());
