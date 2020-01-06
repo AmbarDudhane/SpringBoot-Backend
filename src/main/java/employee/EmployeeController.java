@@ -25,6 +25,11 @@ public class EmployeeController {
 		return empser.getAllEmployees();
 	}
 	
+	@RequestMapping("/")
+	public String helloworld(){
+		return "Welcome to my app";
+	}
+	
 	@RequestMapping("/employees/{id}")
 	public Employee getEmployee(@PathVariable Long id) {
 		return empser.getEmployee(id);
