@@ -43,11 +43,12 @@ public class EmployeeController {
 //	@CrossOrigin(origins = "http://localhost:4200")
 	@CrossOrigin(origins = "https://spingboot-backend.herokuapp.com")
 	@RequestMapping(method = RequestMethod.PUT, value="/employees/{id}")
-	public void updateEmployee(@RequestBody Employee emp, @PathVariable int id) {
+	public void updateEmployee(@RequestBody Employee emp, @PathVariable Long id) {
 		System.out.println("In updateEmployee "+emp.toString());
 		empser.updateEmployee(emp, id);
 	}
 	
+	@CrossOrigin(origins = "https://spingboot-backend.herokuapp.com")
 	@RequestMapping(method = RequestMethod.DELETE, value="/employees/{id}")
 	public void deleteEmployee(@PathVariable Long id) {
 		empser.deleteEmployee(id);
