@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +15,9 @@ public class EmployeeService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+	
+	@Autowired
+    private JavaMailSender javaMailSender;
 	
 	public List<Employee> getAllEmployees() {
 		List<Employee> employees = new ArrayList<>();
@@ -32,12 +37,27 @@ public class EmployeeService {
 		employeeRepository.save(e);
 	}
 	
-	public void updateEmployee(Employee e, int id) {
+	public void updateEmployee(Employee e, Long id) {
 		employeeRepository.save(e);
+		sendEmail(e.getEmail(), "updated", id);
 	}
 
 	public void deleteEmployee(Long id) {
 		// TODO Auto-generated method stub
+		String email = employeeRepository.findById(id).get().getEmail();
 		employeeRepository.deleteById(id);
+		sendEmail(email, "deleted", id);
 	}
+	
+	public void sendEmail(String email, String operation, Long id) {
+		System.out.println("In sendMail");
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(email);
+
+        msg.setSubject("Spring Boot-Backend App Operation Status");
+        msg.setText("Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
+
+        javaMailSender.send(msg);
+
+    }
 }
