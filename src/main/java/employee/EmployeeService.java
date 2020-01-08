@@ -1,6 +1,12 @@
 package employee;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import com.sendgrid.*;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -39,25 +45,53 @@ public class EmployeeService {
 	
 	public void updateEmployee(Employee e, Long id) {
 		employeeRepository.save(e);
-		sendEmail(e.getEmail(), "updated", id);
+		try {
+			sendEmail(e.getEmail(), "updated", id);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	public void deleteEmployee(Long id) {
 		// TODO Auto-generated method stub
 		String email = employeeRepository.findById(id).get().getEmail();
 		employeeRepository.deleteById(id);
-		sendEmail(email, "deleted", id);
+		try {
+			sendEmail(email, "deleted", id);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void sendEmail(String email, String operation, Long id) {
-		System.out.println("In sendMail");
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(email);
+	public void sendEmail(String email, String operation, Long id) throws IOException {
+//		System.out.println("In sendMail");
+//        SimpleMailMessage msg = new SimpleMailMessage();
+//        msg.setTo(email);
+//
+//        msg.setSubject("Spring Boot-Backend App Operation Status");
+//        msg.setText("Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
+//
+//        javaMailSender.send(msg);
+		String api_key = "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"; 
+		Email from = new Email("spring-notify@gmail.com");
+	    String subject = "Spring boot notification";
+	    Email to = new Email(email);
+	    Content content = new Content("text/plain", "Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
+	    Mail mail = new Mail(from, subject, to, content);
 
-        msg.setSubject("Spring Boot-Backend App Operation Status");
-        msg.setText("Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
-
-        javaMailSender.send(msg);
-
+	    SendGrid sg = new SendGrid(System.getenv(api_key));
+	    Request request = new Request();
+	    try {
+	      request.setMethod(Method.POST);
+	      request.setEndpoint("mail/send");
+	      request.setBody(mail.build());
+	      Response response = sg.api(request);
+//	      System.out.println(response.getStatusCode());
+//	      System.out.println(response.getBody());
+//	      System.out.println(response.getHeaders());
+	    } catch (IOException ex) {
+	      throw ex;
+	    }
     }
 }
