@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,8 +21,6 @@ public class EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
-	@Autowired
-    private JavaMailSender javaMailSender;
 	
 	public List<Employee> getAllEmployees() {
 		List<Employee> employees = new ArrayList<>();
@@ -73,8 +70,9 @@ public class EmployeeService {
 //        msg.setText("Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
 //
 //        javaMailSender.send(msg);
-		String api_key = "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"; 
-		Email from = new Email("spring-notify@gmail.com");
+		
+		String api_key = "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"; 
+		Email from = new Email("asdpand@gmail.com");
 	    String subject = "Spring boot notification";
 	    Email to = new Email(email);
 	    Content content = new Content("text/plain", "Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
@@ -87,9 +85,7 @@ public class EmployeeService {
 	      request.setEndpoint("mail/send");
 	      request.setBody(mail.build());
 	      Response response = sg.api(request);
-//	      System.out.println(response.getStatusCode());
-//	      System.out.println(response.getBody());
-//	      System.out.println(response.getHeaders());
+
 	    } catch (IOException ex) {
 	      throw ex;
 	    }
