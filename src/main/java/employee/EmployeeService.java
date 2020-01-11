@@ -71,14 +71,14 @@ public class EmployeeService {
 //
 //        javaMailSender.send(msg);
 		
-		String api_key = "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"; 
+		//String api_key = ""; 
 		Email from = new Email("asdpand@gmail.com");
 	    String subject = "Spring boot notification";
 	    Email to = new Email(email);
 	    Content content = new Content("text/plain", "Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
 	    Mail mail = new Mail(from, subject, to, content);
 
-	    SendGrid sg = new SendGrid(System.getenv(api_key));
+	    SendGrid sg = new SendGrid(System.getenv("API_KEY"));
 	    Request request = new Request();
 	    try {
 	      request.setMethod(Method.POST);
