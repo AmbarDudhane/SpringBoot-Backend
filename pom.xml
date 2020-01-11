@@ -46,6 +46,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		
+		<!-- Pull in as a traditional dependency -->
+		<dependency>
+		    <groupId>com.konghq</groupId>
+		    <artifactId>unirest-java</artifactId>
+		    <version>3.3.00</version>
+		</dependency>
+		
 		<!-- send email -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
