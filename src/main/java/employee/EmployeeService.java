@@ -7,6 +7,11 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 
+import kong.unirest.HttpResponse;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmployeeService {
 
+	private static final String YOUR_DOMAIN_NAME = "sandbox0dcfde19948f488fab568d07693032ea.mailgun.org";
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
@@ -62,32 +68,44 @@ public class EmployeeService {
 	}
 	
 	public void sendEmail(String email, String operation, Long id) throws IOException {
-//		System.out.println("In sendMail");
-//        SimpleMailMessage msg = new SimpleMailMessage();
-//        msg.setTo(email);
-//
-//        msg.setSubject("Spring Boot-Backend App Operation Status");
-//        msg.setText("Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
-//
-//        javaMailSender.send(msg);
+
+		try {
+			JsonNode jsonnode = sendSimpleMessage(email, operation,id);
+			System.out.println("JSON NODE="+jsonnode.toString());
+		}catch(UnirestException e) {
+			e.printStackTrace();
+		}
 		
 		//String api_key = ""; 
-		Email from = new Email("asdpand@gmail.com");
-	    String subject = "Spring boot notification";
-	    Email to = new Email(email);
-	    Content content = new Content("text/plain", "Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
-	    Mail mail = new Mail(from, subject, to, content);
+//		Email from = new Email("asdpand@gmail.com");
+//	    String subject = "Spring boot notification";
+//	    Email to = new Email(email);
+//	    Content content = new Content("text/plain", "Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App");
+//	    Mail mail = new Mail(from, subject, to, content);
+//
+//	    SendGrid sg = new SendGrid(System.getenv("API_KEY"));
+//	    Request request = new Request();
+//	    try {
+//	      request.setMethod(Method.POST);
+//	      request.setEndpoint("mail/send");
+//	      request.setBody(mail.build());
+//	      Response response = sg.api(request);
+//
+//	    } catch (IOException ex) {
+//	      throw ex;
+//	    }
+    }
+	
+	public static JsonNode sendSimpleMessage(String email, String operation, Long id) throws UnirestException {
 
-	    SendGrid sg = new SendGrid(System.getenv("API_KEY"));
-	    Request request = new Request();
-	    try {
-	      request.setMethod(Method.POST);
-	      request.setEndpoint("mail/send");
-	      request.setBody(mail.build());
-	      Response response = sg.api(request);
+        HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + YOUR_DOMAIN_NAME + "/messages")
+            .basicAuth("api", System.getenv("MAILGUN_API_KEY"))
+            .field("from", "Excited User <asdpand@gmail.COM>")
+            .field("to", email)
+            .field("subject", "Spring boot notification")
+            .field("text", "Employee data of id "+id+" is "+operation+" successfully. \n\n From,\nSpring-Boot-App")
+            .asJson();
 
-	    } catch (IOException ex) {
-	      throw ex;
-	    }
+        return request.getBody();
     }
 }
